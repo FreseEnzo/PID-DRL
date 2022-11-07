@@ -1,4 +1,4 @@
-# PIBIC_Dofbot
+# Dofbot - Ball Balancing 
 Experiment in Control of Robotic Manipulators Using Deep Reinforcement Learning
 
 # 1 - The beginning
