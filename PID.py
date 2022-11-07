@@ -34,9 +34,9 @@ cam= cv2.VideoCapture(0)
 
 #PID initialisation 
 desired_posn = 200 #Center of the video
-kp=0.4
-ki=0
-kd=0.1
+kp=0.15
+ki=0.0047
+kd=0.055
 previous_error=0
 timenow=0
 pid_i=0 #Constant initial value
@@ -108,5 +108,6 @@ while True:
        break
 
 #Sending signal to the servo
- Arm.Arm_serial_servo_write(5, servo_signal,400)
+ Arm.Arm_serial_servo_write(5, servo_signal,1) # Very important to pay attention to this delay
+ 
 
