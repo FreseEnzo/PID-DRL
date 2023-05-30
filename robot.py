@@ -97,7 +97,7 @@ def image_rec_start():
         elapsedTime=timenow-time_previous
         vel_x = ((pos_x-previous_x)/elapsedTime)
         previous_x=pos_x
-        arm_angle = 0
+        arm_angle = 90
         #return np.array(arm_angle, pos_x, vel_x, 0)
         out = np.zeros(4)
         
@@ -114,7 +114,7 @@ LongTensor = torch.LongTensor
 plt.style.use('ggplot')
 
 # Saving Model Variabes
-file2save = 'treino1003.pth'
+file2save = 'ntrained3.pth'
 save_model_frequency = 10000
 resume_previous_training = True
 
@@ -254,22 +254,22 @@ for i_episode in range(num_episodes):
     step = 0
     #for step in range(100):
     while True:
-        print("oi"+str(image_rec_start()))
-        print(state)
+      #print("oi"+str(image_rec_start()))
+      #  print(state)
         step += 1
         frames_total += 1
 
         if i_episode % 1 == 0: #Print episodes
           env.render()
         
-       # print("obs: "+str(state))
+        print("obs: "+str(state))
         #action = env.action_space.sample()
         action = qnet_agent.select_action(state)
-        
+       
         new_state, reward, done, info = env.step(action)
 
         #print da ação
-        #print("action: "+str(env.step(action)[0][0]*90))
+        print("action: "+str(env.step(action)[0][0]*90))
         
         state = image_rec_start()
         
@@ -297,16 +297,12 @@ for i_episode in range(num_episodes):
                     sum(steps_total[-report_interval:])/report_interval,
                     mean_reward_100,
                     sum(steps_total)/len(steps_total),
-                   
                     frames_total
                           ) 
                   )
                   
                 elapsed_time = time.time() - start_time
                 print("Elapsed time: ", time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-
-
-
             break
         
 
