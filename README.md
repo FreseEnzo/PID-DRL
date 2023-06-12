@@ -13,3 +13,5 @@ Experiment in Control of Robotic Manipulators Using Deep Reinforcement Learning
 Trained Dueling-DQN example:
 
 ![ezgif com-video-to-gif](https://user-images.githubusercontent.com/80589396/226601097-793c1ced-e976-409c-b12c-c606d78cff98.gif)
+
+https://github.com/simon-larsson/ballbeam-gym
