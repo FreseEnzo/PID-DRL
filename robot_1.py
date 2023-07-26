@@ -91,14 +91,14 @@ def image_rec_start():
         desired_pos = 200
         #PID calcuation
         pos_x = (cX-desired_pos)/1.5 #parametro a metrificar
-        global timenow, previous_x
+        global timenow, previous_x, arm_angle
         time_previous=timenow
         timenow=time.time()
         elapsedTime=timenow-time_previous
         vel_x = ((pos_x-previous_x)/elapsedTime)
         previous_x=pos_x
         #arm_angle = Arm.Arm_serial_servo_read(5);
-        arm_angle = 0
+        arm_angle = 0.2
         out = np.zeros(4)
         return np.array([arm_angle, pos_x, vel_x, 0])
         
@@ -253,7 +253,7 @@ for i_episode in range(num_episodes):
     step = 0
     while True:
        # print("Camera Feedback vector"+str(image_rec_start()))
-        print(state)
+        #print(state)
         step += 1
         frames_total += 1
         
@@ -262,16 +262,18 @@ for i_episode in range(num_episodes):
            
        # print("obs: "+str(state))
         #action = env.action_space.sample()
+        state = image_rec_start()
+
         action = qnet_agent.select_action(state)
         
-        new_state, reward, done, info = env.step(action)
+        state, reward, done, info = env.step(action)
 
         #print da ação
     
-        #Arm.Arm_serial_servo_write(5, env.step(action)[0][0]*90,1)
-        state = image_rec_start()
-        #print(env.step(action)[0][0]*90)
-        #state = new_state
+        #Arm.Arm_serial_servo_write(5, arm_angle + (action -1),1)
+        
+        print(action)
+        
         
         
         if done:

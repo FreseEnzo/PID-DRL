@@ -26,7 +26,7 @@ LongTensor = torch.LongTensor
 plt.style.use('ggplot')
 
 # Saving Model Variabes
-file2save = 'ntrained1000.pth'
+file2save = 'vector.pth'
 save_model_frequency = 10000
 resume_previous_training = True
 
