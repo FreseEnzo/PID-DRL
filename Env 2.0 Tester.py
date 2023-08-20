@@ -26,20 +26,20 @@ LongTensor = torch.LongTensor
 plt.style.use('ggplot')
 
 # Saving Model Variabes
-file2save = 'vector.pth'
+file2save = 'treino_robot.pth'
 save_model_frequency = 10000
 resume_previous_training = True
 
 
 
 #Environment initial definitions
-kwargs = {'timestep': 0.05, 
-          'setpoint': 0.0,
-          'beam_length': 1.0,
-          'max_angle': 0.4, #isso é um limitante
-          'max_timesteps':None,
-          'init_velocity': 1.5,
-          'action_mode': 'discrete'} #discrete chose (keep, increase, decrease)
+kwargs = {'timestep': 0.1, # Tempo entre as ações 
+          'setpoint': 0.0, # Ponto de equilíbrio desejado
+          'beam_length': 1.0, # Tamanho da bola
+          'max_angle': 0.4, # Ângulo máximo em radianos
+          'max_timesteps':None, # None, pois não é um treinamento
+          'init_velocity': 1.0, # Velocidade inicial
+          'action_mode': 'discrete'} # Modo de ação discreto
 
 #Building the environment 
 env = gym.make('BallBeamSetpoint-v0', **kwargs)
@@ -174,41 +174,6 @@ for i_episode in range(num_episodes):
         new_state, reward, done, info = env.step(action)
         
         state = new_state
-        
-        if done:
-            steps_total.append(step)
-            
-            mean_reward_100 = sum(steps_total[-100:])/100
-            
-            if (mean_reward_100 > score_to_solve and solved == False):
-                print("SOLVED! After %i episodes " % i_episode)
-                solved_after = i_episode
-                solved = True
-            
-            if (i_episode % report_interval == 0):
-                
-                
-                
-                print("\n*** Episode %i *** \
-                      \nAv.reward: [last %i]: %.2f, [last 100]: %.2f, [all]: %.2f \
-                      \n frames_total: %i" 
-                  % 
-                  ( i_episode,
-                    report_interval,
-                    sum(steps_total[-report_interval:])/report_interval,
-                    mean_reward_100,
-                    sum(steps_total)/len(steps_total),
-                   
-                    frames_total
-                          ) 
-                  )
-                  
-                elapsed_time = time.time() - start_time
-                print("Elapsed time: ", time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
-
-
-
-            break
         
 
 print("\n\n\n\nAverage reward: %.2f" % (sum(steps_total)/num_episodes))

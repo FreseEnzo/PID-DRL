@@ -3,8 +3,7 @@
 # PIBIC 2D DQN
 # Coded by Enzo Frese
 #
-import os
-os.environ['MPLCONFIGDIR'] = os.getcwd() + '/configs/'
+
 # Imports
 import torch
 import torch.nn as nn
@@ -20,7 +19,8 @@ import os.path
 import cv2
 import time
 import smbus
-
+import os
+os.environ['MPLCONFIGDIR'] = os.getcwd() + '/configs/'
 
 bus = smbus.SMBus(1)
 #Image Rec
@@ -31,11 +31,11 @@ arm_angle = 0
 last_angle = 0
 #Image rec
 
+# Arm I2C function
 def Arm_serial_servo_write(id, angle, time):
-    if id == 2 or id == 3 or id == 4:  # 与实际相反角度
+    if id == 2 or id == 3 or id == 4:  
         angle = 180 - angle
         pos = int((3100 - 900) * (angle - 0) / (180 - 0) + 900)
-        # pos = ((pos << 8) & 0xff00) | ((pos >> 8) & 0xff)
         value_H = (pos >> 8) & 0xFF
         value_L = pos & 0xFF
         time_H = (time >> 8) & 0xFF
@@ -46,7 +46,6 @@ def Arm_serial_servo_write(id, angle, time):
             print('Arm_serial_servo_write I2C error')
     elif id == 5:
         pos = int((3700 - 380) * (angle - 0) / (270 - 0) + 380)
-        # pos = ((pos << 8) & 0xff00) | ((pos >> 8) & 0xff)
         value_H = (pos >> 8) & 0xFF
         value_L = pos & 0xFF
         time_H = (time >> 8) & 0xFF
@@ -57,7 +56,6 @@ def Arm_serial_servo_write(id, angle, time):
             print('Arm_serial_servo_write I2C error')
     else:
         pos = int((3100 - 900) * (angle - 0) / (180 - 0) + 900)
-        # pos = ((pos << 8) & 0xff00) | ((pos >> 8) & 0xff)
         value_H = (pos >> 8) & 0xFF
         value_L = pos & 0xFF
         time_H = (time >> 8) & 0xFF
@@ -66,6 +64,7 @@ def Arm_serial_servo_write(id, angle, time):
             bus.write_i2c_block_data(0x15, 0x10 + id, [value_H, value_L, time_H, time_L])
         except:
             print('Arm_serial_servo_write I2C error')
+
 #Bring the robot to the initial position
 def robot_init():
 
@@ -287,30 +286,21 @@ solved = False
 start_time = time.time()
 
 for i_episode in range(num_episodes):
+    # Call initial functions
     env.reset()
-    #env.env.state = image_rec_start()
     state = env.reset()
-   # print(state)
-    #print(state)
     step = 0
+    # Loop begin
     while True:
-        #print("Camera Feedback vector"+str(image_rec_start()))
-        #print(state)
-        step += 1
-        frames_total += 1
-        
-        #env.render()
-       # print("obs: "+str(state))
-        #action = env.action_space.sample()
+        # Get state and angle from image recognition and encoder
         state , arm_angle = image_rec_start()
-
         action = qnet_agent.select_action(state)
         if action != None:	
             state, reward, done, info = env.step(action)
-
-        #print da ação
-        print(f"action{action}")
-        print(f"angle arm{arm_angle}")
+        # Print actions
+        print(f"Action: {action}")
+        print(f"Angle Arm: {arm_angle}")
+        # Send command to the arm
         Arm_serial_servo_write(5,arm_angle + (action -1)*15,1)
         
         

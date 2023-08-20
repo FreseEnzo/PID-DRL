@@ -26,19 +26,19 @@ LongTensor = torch.LongTensor
 plt.style.use('ggplot')
 
 # Saving Model Variabes
-file2save = 'vector.pth'
+file2save = 'new_test.pth'
 save_model_frequency = 100
 resume_previous_training = False
 
 
 
 #Environment initial definitions
-kwargs = {'timestep': 0.05, 
+kwargs = {'timestep': 0.01, 
           'setpoint': 0,
           'beam_length': 1.0,
           'max_angle': 0.4, #isso é um limitante
           'max_timesteps':100,
-          'init_velocity': 0.5,
+          'init_velocity': 1.3,
           'action_mode': 'discrete'} #discrete chose (keep, increase, decrease)
 
 #Building the environment 
@@ -58,7 +58,7 @@ random.seed(seed_value)
 training = False
 ###### PARAMS ######
 learning_rate = 0.001
-num_episodes = 500
+num_episodes = 1000
 gamma = 0.999
 
 hidden_layer = 64
